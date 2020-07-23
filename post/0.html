@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+ <head>
+ <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+ <title>sdasdsa</title>
+ <link href="/static/default.css" rel="stylesheet">
+ <link href="/static/github.css" rel="stylesheet">
+ <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" crossorigin="anonymous">
+ <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js" crossorigin="anonymous">
+ </script>
+ <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+ <script>
+  document.addEventListener("DOMContentLoaded", function() {
+    renderMathInElement(document.body, { delimiters: [
+      {left: "$$", right: "$$", display: true},
+      {left: "$", right: "$", display: false},
+      {left: "\\(", right: "\\)", display: false},
+      {left: "\\[", right: "\\]", display: true}
+    ]});
+  });
+ </script>
+ </head>
+ <body>
+   <p><a href="/">HOME</a></p>
+ <p><font color='red'>dasd</font></p>
+<h2 id="hello-world">Hello world!</h2>
+<p>You never believe in me!</p>
+<p>$\sum$ sdasd</p>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">you</span><span class="p">:</span>
+    <span class="k">pass</span>
+</code></pre></div>
+
+
+<p>indicator-function and c-transform's smooth approximation</p>
+<p>这篇论文中，出现了很多函数的光滑化版本，我们这里集中探讨一下. 关于光滑化的来说和光滑化的技巧，我确实所知不多，文章中也没有给出相应的参考文献. 但是是有规律可循的.</p>
+<p><strong>请注意</strong>，这些光滑化函数列的收敛性其实通过 fenchel duality 一下子就可以看出来（凸共轭是连续算子）. 下面的证明仔细个人的娱乐而已.</p>
+<h2 id="_1">指示函数的光滑化：</h2>
+<p>$\iota_{U_c} = \lim\limits_{\varepsilon\to 0} \iota^\varepsilon_{U_c}$, where</p>
+<p>$ \iota^\varepsilon_{U_c} = \varepsilon \int_{X\times Y} \exp(\frac{u(x)+v(y)-c(x,y)}{\varepsilon}) d\mu(x)d\nu(y) $.</p>
+<p>为什么说上面的极限成立？可以看到，当 $\varepsilon$ 充分小时，</p>
+<p>1) 如果 $u(x)+v(y) < c(x,y)$, $\forall x, \forall y$. 那么 $ \frac{u(x)+v(y)-c(x,y)}{\varepsilon} \to -\infty $, thus $ \exp(\frac{u(x)+v(y)-c(x,y)}{\varepsilon}) \to 0 $.</p>
+<p>2) 如果存在 $x,y$ s.t. $u(x)+v(y) > c(x,y)$, 那么 $ \frac{u(x)+v(y)-c(x,y)}{\varepsilon} \to +\infty $, thus $\exp(\frac{u(x)+v(y)-c(x,y)}{\varepsilon}) \to +\infty$.</p>
+<p>3) 当 $u(x)+v(y) = c(x,y)$, $\forall x, \forall y$, 那么显然对于任何的 $\varepsilon$, 有 $ \exp(\frac{u(x)+v(y)-c(x,y)}{\varepsilon}) = 1 $ thus $ \iota^\varepsilon_{U_c} = \varepsilon \mu(X) \nu(Y) = \varepsilon \to 0 $.</p>
+<p>4) 其他情况可以结合 1) 和 3) 得到结果.</p>
+<p>因此，我们可以看到，无论是哪种情况，都有 $ \iota_{U_c} = \lim\limits_{\varepsilon\to 0} \iota^\varepsilon_{U_c}$. 当然这不算证明，只能说是直观的一些推理. 形式化的证明以后有空写一下.</p>
+<p>显然，$\iota^\varepsilon$ 是光滑的.</p>
+<p><code>Remark</code>: 逼近 $\iota_{U_c}$ 的方法可不止上面这一种，但是用的多的、适合数值计算的主要还是上面的这种. 而且这是一个非常好用的光滑化的模板，任何类似的边界约束结构都可以得到类似的光滑化指示函数.</p>
+<p><code>Remark</code>: $\exp (\frac{\cdot}{\varepsilon})$ 可以将 {-, 0, +} 映射到 {0, 1, $\infty$}. 负号一般和小于号相关联，正号一般可以和大于号关联，因而在转换边界条件的时候非常的方便.</p>
+<p>其实我们可以站在更高的观点上来看待指数函数的光滑化问题：</p>
+<p>令 $ \delta(x) = \begin{cases} 0 & x \le 0\\ +\infty & otherwise \end{cases} $
+那么，显然有 $ \iota_{U_c}(u, v) = \delta(u+v-c) $</p>
+<p>同理令 $ \delta_\varepsilon(x) = \varepsilon \int_{X\times Y} \exp(\frac{x}{\varepsilon}) d\pi(x) $,
+那么显然有 $ \iota^\varepsilon_{U_c} = \delta_\varepsilon(u+v-c) $</p>
+<p>这意味着，我们只需要证明 $ \delta_\varepsilon(x) $ 光滑逼近于 $ \delta(x) $ 即可.</p>
+<h2 id="c-transform">c-transform的光滑化</h2>
+<p>c-transform 的定义：$ v^c(x) = \min\limits_{y\in \mathcal{Y}} c(x,y) - v(y)$.</p>
+<p>使用 c-transform 的好处是可以消去其中一个定价函数, say, e.g. $u$, 与此同时顺手就消去了 $U_c$ 的约束. </p>
+<p>$ v^c(x) = \lim\limits_{\varepsilon\to 0} v^{c,\varepsilon}(x) = \lim\limits_{\varepsilon\to 0} -\varepsilon \log(\int_{\mathcal{Y}}\exp(\frac{v(y) - c(x, y)}{\varepsilon})d\nu(y)) $.</p>
+<p>还是一样，我们做一些直观的推导.</p>
+<p>假设 $y_0(x) \in arg\min\limits_{y\in\mathcal{Y}} c(x, y) - v(y)$ for a specific $x$. 简记为 $y_0$.
+那么
+$v^{c,\varepsilon}(x) = -\varepsilon \log(\exp(\frac{v(y_0) - c(x, y_0)}{\varepsilon})\int_{\mathcal{Y}}\exp(\frac{v(y) - c(x, y) - v(y_0) + c(x, y_0)}{\varepsilon})d\nu(y) \\= -\varepsilon \log(\exp(\frac{v(y_0) - c(x, y_0)}{\varepsilon})) -\varepsilon \log\int_{\mathcal{Y}}\exp(\frac{v(y) - c(x, y) - v(y_0) + c(x, y_0)}{\varepsilon})d\nu(y) \\= c(x, y_0) - v(y_0) -\varepsilon \log\int_{\mathcal{Y}}\exp(\frac{v(y) - c(x, y) - v(y_0) + c(x, y_0)}{\varepsilon})d\nu(y)$</p>
+<p>我们下面重点分析一下 $-\varepsilon \log\int_{\mathcal{Y}}\exp(\frac{v(y) - c(x, y) - v(y_0) + c(x, y_0)}{\varepsilon})d\nu(y)$.</p>
+<p>首先，它肯定是正的，只要注意到 $1/\int_{\mathcal{Y}}\exp(\frac{v(y) - c(x, y) - v(y_0) + c(x, y_0)}{\varepsilon})d\nu(y) \to +\infty$ as $\varepsilon\to 0$.</p>
+<p>其次，它是有上界的. 我们注意到 $\log$ 是上凸的函数，所以 
+$ \varepsilon\log\int_{\mathcal{Y}}\exp(\frac{v(y) - c(x, y) - v(y_0) + c(x, y_0)}{\varepsilon})d\nu(y) \\\ge \varepsilon\int_{\mathcal{Y}}\log\exp(\frac{v(y) - c(x, y) - v(y_0) + c(x, y_0)}{\varepsilon})d\nu(y) \\= \int_{\mathcal{Y}}v(y) - c(x, y) - v(y_0) + c(x, y_0) d\nu(y) $
+从而 $-\varepsilon \log\int_{\mathcal{Y}}\exp(\frac{v(y) - c(x, y) - v(y_0) + c(x, y_0)}{\varepsilon})d\nu(y) \le \int_{\mathcal{Y}}(c(x, y)-v(y) - (c(x, y_0) - v(y_0)) d\nu(y)$.</p>
+<p>不过这个界不够 tight. </p>
+<p>我们得用到 $v(y)$ 和 $c(x,y)$ 的凸性. 实际上，我们只需要 $(v(y) - c(x,y))$ 是 locally lipschitz 连续的就可以了（凸函数肯定是 locally lipschitz 连续的，事实上，凸函数在任意的闭区间都是 Lipschitz 的）.</p>
+<p>那么，由假设条件， $ v(y) - c(x,y) $ is locally lipschitz, then there is a neighborhood of $y_0$, note as $U$. $ v(y) - c(x,y) $ is lipshcitz continous on $U$, note the lipschitz constant as $M$.</p>
+<p>显然，当 $\varepsilon$ 足够小时，有 $K = \{y; |y-y_0| \le \frac{1}{M}\varepsilon\} \subset U$.</p>
+<p>记 $f = \frac{d\nu}{dm}$, 那么 $f$ 连续的，因此，在闭区间 $K$ 上是有界的，不妨假设 $f(y)$ 在 $U$ 上的上界是 $M_1$. (thus $M_1$与$\varepsilon$无关).</p>
+<p>那么，记 $K_1 = \{ y; |y-y_0| \le \frac{1}{M*M_1}\varepsilon \}$, 只要 $\varepsilon$ 足够小，显然有 $K_1 \subset U$. 所以 $ v(y) - c(x,y) $ 在 $K_1$ 上也是 Lipschitz 连续的.</p>
+<p>因此，在 $K_1$ 上，我们有 
+$ |v(y) - c(x,y) - (v(y_0) - c(x, y_0))|*f(y) \le M*|y-y_0|*M_1 \le \varepsilon $. 由于 $v(y) - c(x,y) - (v(y_0) - c(x, y_0))$ 肯定是负的，所以 on $K_1$,
+$(v(y) - c(x,y) - (v(y_0) - c(x, y_0)))f(y) \ge -\varepsilon$.</p>
+<p>那么 
+$ \int_{\mathcal{Y}}\exp(\frac{v(y) - c(x, y) - v(y_0) + c(x, y_0)}{\varepsilon})d\nu(y) \\= \int_{\mathcal{Y}}\exp(\frac{v(y) - c(x, y) - v(y_0) + c(x, y_0)}{\varepsilon})f(y)dm(y) \ge \int_{y\in K_1}\exp(\frac{v(y) - c(x, y) - v(y_0) + c(x, y_0)}{\varepsilon})f(y)dm(y) \ge e^{-1} m(K_1) = e^{-1} \frac{2\varepsilon}{M*M_1} $</p>
+<p>从而 $-\varepsilon \log\int_{\mathcal{Y}}\exp(\frac{v(y) - c(x, y) - v(y_0) + c(x, y_0)}{\varepsilon})d\nu(y) \le -\varepsilon \log e^{-1} \frac{2\varepsilon}{M*M_1}$</p>
+<p>这样一来，我们就可以看到，当 $\varepsilon \to 0$ 时，$-\varepsilon \log e^{-1} \frac{2\varepsilon}{M*M_1} \to 0$, 而 $-\varepsilon \log\int_{\mathcal{Y}}\exp(\frac{v(y) - c(x, y) - v(y_0) + c(x, y_0)}{\varepsilon})d\nu(y)$ 本来就是非负的，这说明
+$ \lim\limits_{\varepsilon\to 0} -\varepsilon \log\int_{\mathcal{Y}}\exp(\frac{v(y) - c(x, y) - v(y_0) + c(x, y_0)}{\varepsilon})d\nu(y) = 0 $. 从而就证明了光滑化序列 $v^{c,\varepsilon} \to v^{c}$ as $\varepsilon\to 0$.</p>
+<p>从上面的证明过程我们可以看到，c-transform的光滑化构造还是相当 tricky 的.</p>
+<p>下面讲一下我为什么会想到使用 locally lipschitz 的性质.</p>
+<p>昨天我就一直在想，怎么找到 $\int_{\mathcal{Y}}\exp(\frac{v(y) - c(x, y) - v(y_0) + c(x, y_0)}{\varepsilon})d\nu(y)$ 的一个下界，是 $\varepsilon$ 相关的，那么我们就直接可以有 $\varepsilon \log \varepsilon \to 0$ 得出结论.</p>
+<p>但是一般来看，当 $\varepsilon \to 0$ 时，$\frac{v(y) - c(x, y) - v(y_0) + c(x, y_0)}{\varepsilon} \to -\infty$, 这根本没办法估计啊. 所以我就想，能不能对积分进行<strong>分段估计</strong>以使得下界更加tight.</p>
+<p>所以我就想能不能找到一个子区间，使得 $\frac{v(y) - c(x, y) - v(y_0) + c(x, y_0)}{\varepsilon}$ 在子区间上是有界的，这样一来，该子区间上的积分就不为 0, 我们就可以只考虑该子区间的积分（就可以得到一个tight的下界了，也就是对积分的分段估计以使得下界更加tight，这是常用的技法），例如 $ -\varepsilon  < v(y) - c(x, y) - v(y_0) + c(x, y_0) < 0$.</p>
+<p>这样一来，我就想到了在实分析中，对付勒贝格积分的不等式估计中经常使用的一招：取值区间法，就是只考虑 $ -\varepsilon  < v(y) - c(x, y) - v(y_0) + c(x, y_0) < 0$ 区间内的积分.</p>
+<p>那么就有 </p>
+<p>$ \int_{\mathcal{Y}}\exp(\frac{v(y) - c(x, y) - v(y_0) + c(x, y_0)}{\varepsilon})d\nu(y) \\\ge \int_{-\varepsilon  < -\varepsilon  < v(y) - c(x, y) - v(y_0) + c(x, y_0) < 0}\exp(\frac{v(y) - c(x, y) - v(y_0) + c(x, y_0)}{\varepsilon})d\nu(y) \\\ge e^{-1} \nu(\{-\varepsilon  < v(y) - c(x, y) - v(y_0) + c(x, y_0) < 0\}) $.</p>
+<p>这样一来，积分的估计就转换成了对 $ \nu(\{-\varepsilon  < v(y) - c(x, y) - v(y_0) + c(x, y_0) < 0\}) $ 的估计，由于 $\nu$ 是 positive radon measure, 所以还可以进一步转换为对 $m(\{-\varepsilon  < v(y) - c(x, y) - v(y_0) + c(x, y_0) < 0\})$ 的估计. 因此，我马上就想到了，如果有 lipschitz 性质的话，马上就能转换成 $M*m(\{-\varepsilon  < y - y_0 < 0\})$, 也就是得出了结果。</p>
+<p>经过把上面的思路严谨化，我们就得到上面的推导.</p>
+<p><code>Remark</code>: 使用 $\log \int \exp(\cdot) $ 来光滑逼近 $\min$ 函数是非常常用的技法，是 $\min$ 函数最主要的光滑逼近序列之一.</p>
+ </body>
+</html>
