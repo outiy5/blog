@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+ <head>
+ <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+ <title>IBM pulse programming</title>
+ <link href="/static/default.css" rel="stylesheet">
+ <link href="/static/github.css" rel="stylesheet">
+ <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" crossorigin="anonymous">
+ <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js" crossorigin="anonymous">
+ </script>
+ <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+ <script>
+  document.addEventListener("DOMContentLoaded", function() {
+    renderMathInElement(document.body, { delimiters: [
+      {left: "$$", right: "$$", display: true},
+      {left: "$", right: "$", display: false},
+      {left: "\\(", right: "\\)", display: false},
+      {left: "\\[", right: "\\]", display: true}
+    ]});
+  });
+ </script>
+ </head>
+ <body>
+   <p><a href="/">HOME</a></p>
+ <p>IBM pulse 编程大总结，持续更新中！💥
+<!-- more --></p>
+<h2 id="pipeline">Pipeline</h2>
+<p>AWG frequency problem as indicated in paper.</p>
+<h2 id="api">API</h2>
+<p>在 2020-07-01 以后，qiskit pulse 接口发生了很大的变化。例如，discrete 模块，constant pulse 是 2020-07-09 才加入的；</p>
+<p><a href="https://qiskit.org/documentation/stubs/qiskit.pulse.Gaussian.html">Gaussian</a>
+$f(x) = amp * exp( -(1/2) * (x - duration/2)^2 / sigma^2) )  ,  0 <= x < duration$</p>
+<h2 id="pulse-simulator">Pulse Simulator</h2>
+<p>FakeAlmaden 这个 test mock 是不可以跑 pulse program 的，会出现内存 &lt; 2.0TB 的警告。</p>
+<p>幸运的是，在 2020-07-14 IBM 重新写了一份关于 pulse api 的 notebook，里面介绍了他们最新的 pulse simulator. 从 Commit 历史来看，这个 pulse simulator 立项时间是 2020-01-24, 初步成型的时间是 2020-07-01.</p>
+<p>TODO: A detailed test and documenting.</p>
+<h2 id="reference">Reference</h2>
+<p>arxiv. 2004. Qiskit Pulse: Programming Quantum Computers Through the Cloud with Pulses</p>
+<p>https://qiskit.org/documentation/tutorials/pulse/index.html 最新上线的教程。</p>
+ </body>
+</html>
