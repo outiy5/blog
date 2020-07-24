@@ -33,7 +33,7 @@
 <p><a href="https://qiskit.org/documentation/stubs/qiskit.pulse.Gaussian.html">Gaussian</a> 生成公式：
 $f(x) = amp * exp( -(1/2) * (x - duration/2)^2 / sigma^2) )  ,  0 <= x < duration$</p>
 <p>和<a href="https://github.com/Qiskit/qiskit-terra/blob/master/qiskit/pulse/library/continuous.py" title="源代码">源代码</a>是一致的。所以不用额外去 check too much details 了。</p>
-<p>continuous --&gt; disrete --&gt; pulse</p>
+<p>continuous --&gt; disrete --&gt; parameteric pulse</p>
 <h2 id="pulse-simulator">Pulse Simulator</h2>
 <p>FakeAlmaden 这个 test mock 是不可以跑 pulse program 的，会出现内存 &lt; 2.0TB 的警告。</p>
 <p>幸运的是，在 2020-07-14 IBM 重新写了一份关于 pulse api 的 notebook，里面介绍了他们最新的 pulse simulator. 从 Commit 历史来看，这个 pulse simulator 立项时间是 2020-01-24, 初步成型的时间是 2020-07-01.</p>
